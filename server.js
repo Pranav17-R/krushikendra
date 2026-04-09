@@ -43,7 +43,15 @@ app.use(cors({
 }));
 
 // ── Static assets ──────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 // ── Body parsing ───────────────────────────────
 app.use(express.urlencoded({ extended: true }));

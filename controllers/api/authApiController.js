@@ -4,6 +4,7 @@
 // ================================================
 const Admin = require('../../models/Admin');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 // ── Shared response helper ───────────────────────
 const ok  = (res, data, msg = 'Success', status = 200) =>
@@ -15,6 +16,11 @@ const err = (res, msg, status = 400, extra = {}) =>
 // Authenticate admin and return JWT token
 exports.login = async (req, res) => {
   try {
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return err(res, 'Database not connected. Please check your configuration.', 503);
+    }
+
     const { username, password } = req.body;
     
     if (!username || !password) {
@@ -55,6 +61,12 @@ exports.login = async (req, res) => {
 // if the DB has no admins.
 exports.seedDefaultAdmin = async () => {
   try {
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('⚠️  Database not connected. Skipping admin seeding.');
+      return;
+    }
+
     const count = await Admin.countDocuments();
     if (count === 0) {
       await Admin.create({
