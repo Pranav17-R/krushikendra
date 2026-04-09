@@ -1,0 +1,96 @@
+# REST API — Trishul Krushi Kendra
+
+## ✅ Live Test Results
+
+```json
+GET /api/v1/health
+{"success":true,"message":"Trishul Krushi Kendra API is running","db":"connected","version":"v1"}
+
+GET /api/v1/products
+{"success":true,"message":"Success","count":0,"total":0,"page":1,"pages":0,"data":[]}
+```
+
+---
+
+## 📁 Files Created
+
+```
+controllers/api/
+  ├── productApiController.js   ← CRUD + pagination + soft-delete
+  ├── enquiryApiController.js   ← POST submit, GET list, PATCH status
+  └── dealerApiController.js    ← GET dealers, POST apply, GET applications, PUT status
+
+routes/api/
+  ├── products.js
+  ├── enquiries.js
+  ├── dealers.js
+  └── index.js                  ← mounts sub-routers + /health endpoint
+```
+
+[server.js](file:///c:/Users/prana/Desktop/krushikendra/server.js) updated: `app.use('/api/v1', apiRouter)` added above EJS routes.
+
+---
+
+## 🔌 Full API Reference
+
+### Products — `/api/v1/products`
+| Method | URL | Description |
+|---|---|---|
+| `GET` | `/api/v1/products` | List all products (paginated) |
+| `GET` | `/api/v1/products/:id` | Get by ObjectId **or** slug |
+| `POST` | `/api/v1/products` | Create a new product |
+| `PUT` | `/api/v1/products/:id` | Update product |
+| `DELETE` | `/api/v1/products/:id` | Soft-delete (sets status → inactive) |
+
+**Query params (GET list):** `?filter=organic&search=urea&featured=true&page=1&limit=20`
+
+---
+
+### Enquiries — `/api/v1/enquiries`
+| Method | URL | Description |
+|---|---|---|
+| `POST` | `/api/v1/enquiries` | Submit farmer enquiry *(public)* |
+| `GET` | `/api/v1/enquiries` | List all enquiries *(admin)* |
+| `PATCH` | `/api/v1/enquiries/:id/status` | Update status + adminNote *(admin)* |
+
+**POST body:** `name, phone, village, product, message` (required) + `crop` (optional)  
+**PATCH body:** `{ "status": "seen" | "replied" | "closed", "adminNote": "..." }`  
+**GET params:** `?status=new&page=1&limit=20`
+
+---
+
+### Dealers — `/api/v1/dealers`
+| Method | URL | Description |
+|---|---|---|
+| `GET` | `/api/v1/dealers` | List active dealers *(public)* |
+| `POST` | `/api/v1/dealers/apply` | Submit dealer application *(public)* |
+| `GET` | `/api/v1/dealers/applications` | List all applications *(admin)* |
+| `PUT` | `/api/v1/dealers/applications/:id/status` | Approve / reject *(admin)* |
+
+**Auto-promotion:** Approving an application automatically creates a [Dealer](file:///c:/Users/prana/Desktop/krushikendra/controllers/dealerController.js#22-51) document.
+
+**GET params:** `?district=pune`  
+**PUT body:** `{ "status": "approved" | "rejected", "reviewedBy": "Admin", "adminNote": "..." }`
+
+---
+
+## 📦 Standard JSON Response Format
+
+```json
+// Success
+{ "success": true, "message": "...", "count": N, "total": N, "data": [...] }
+
+// Error
+{ "success": false, "message": "...", "errors": { "field": "reason" } }
+```
+
+### HTTP Status Codes Used
+| Code | Meaning |
+|---|---|
+| `200` | OK |
+| `201` | Created |
+| `400` | Bad request |
+| `404` | Not found |
+| `409` | Duplicate (slug conflict) |
+| `422` | Validation failed (with field errors) |
+| `500` | Server error |

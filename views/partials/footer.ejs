@@ -1,0 +1,50 @@
+<%# views/partials/footer.ejs – shared footer %>
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <span style="font-size:2rem;">🌾</span>
+        <div>
+          <strong>Trishul Krushi Kendra</strong>
+          <div style="font-size:0.8rem;opacity:0.65;margin-top:2px;">Agricultural Retail Store</div>
+        </div>
+      </div>
+      <p class="footer-desc">Trusted by 500+ farmers across Maharashtra. We provide quality fertilizers, pesticides, and expert agronomy advice.</p>
+
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/dealers">Find a Dealer</a></li>
+        <li><a href="/enquiry">Send Enquiry</a></li>
+        <li><a href="/become-dealer">Become a Dealer</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Product Categories</h4>
+      <ul>
+        <li><a href="/products?filter=organic">Organic Fertilizers</a></li>
+        <li><a href="/products?filter=chemical">Chemical Fertilizers</a></li>
+        <li><a href="/products?filter=pesticide">Pesticides</a></li>
+        <li><a href="/products?filter=crop-protection">Crop Protection</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <ul class="footer-contact-list">
+        <li>📍 Cotton market ,khamgaon 444303</li>
+        <li>📞 <a href="tel:+919422184071">+91 94221 84071</a></li>
+
+        <li>🕐 Mon–Sat: 8:00 AM – 7:00 PM</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+      <span>© <%= new Date().getFullYear() %> Trishul Krushi Kendra. All rights reserved.</span>
+      <a href="/admin" style="opacity:0.4;font-size:0.75rem;">Admin</a>
+    </div>
+  </div>
+</footer>

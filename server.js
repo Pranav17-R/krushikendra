@@ -1,0 +1,76 @@
+// ================================================
+//  TRISHUL KRUSHI KENDRA – server.js
+//  Express application entry point
+// ================================================
+
+require('dotenv').config();
+const express      = require('express');
+const path         = require('path');
+const cors         = require('cors');
+const connectDB    = require('./config/db');
+const logger       = require('./middleware/logger');
+const notFound     = require('./middleware/notFound');
+const errorHandler = require('./middleware/errorHandler');
+
+// ── Route imports ──────────────────────────────
+const indexRouter      = require('./routes/index');
+const productsRouter   = require('./routes/products');
+const dealersRouter    = require('./routes/dealers');
+const enquiryRouter    = require('./routes/enquiry');
+const dealerAppRouter  = require('./routes/dealer-application');
+const adminRouter      = require('./routes/admin');
+const apiRouter        = require('./routes/api/index');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+// ── Connect to MongoDB ─────────────────────────
+connectDB().then((conn) => {
+  if (conn) {
+    require('./controllers/api/authApiController').seedDefaultAdmin();
+  }
+});
+
+// ── View engine ────────────────────────────────
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// ── CORS ───────────────────────────────────────
+app.use(cors({
+  origin:      process.env.CORS_ORIGIN || '*',
+  methods:     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: true,
+}));
+
+// ── Static assets ──────────────────────────────
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ── Body parsing ───────────────────────────────
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// ── Request logger ─────────────────────────────
+app.use(logger);
+
+// ── REST API (v1) ──────────────────────────────
+app.use('/api/v1',        apiRouter);
+
+// ── EJS Page Routes ────────────────────────────
+app.use('/',              indexRouter);
+app.use('/products',      productsRouter);
+app.use('/dealers',       dealersRouter);
+app.use('/enquiry',       enquiryRouter);
+app.use('/become-dealer', dealerAppRouter);
+app.use('/admin',         adminRouter);
+
+// ── 404 & Error handlers ───────────────────────
+app.use(notFound);
+app.use(errorHandler);
+
+// ── Start ──────────────────────────────────────
+app.listen(PORT, () => {
+  console.log(`🌾 Trishul Krushi Kendra running at http://localhost:${PORT}`);
+  console.log(`   Environment : ${process.env.NODE_ENV || 'development'}`);
+});
+
+module.exports = app;

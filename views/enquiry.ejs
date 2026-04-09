@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<div class="page-hero page-hero-green">
+  <div class="container">
+    <div class="breadcrumb"><a href="/">Home</a> / Farmer Enquiry</div>
+    <h1>Send Your Enquiry</h1>
+    <p>Tell us what you need — our agronomy team responds within 24 hours.</p>
+  </div>
+</div>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <div class="container trust-bar-inner">
+    <span>⚡ 24hr response</span>
+    <span>🔒 100% confidential</span>
+    <span>👨‍🌾 Expert advice — free</span>
+    <span>📞 Call-back guaranteed</span>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container enquiry-layout">
+
+    <!-- Sidebar -->
+    <aside class="enquiry-sidebar">
+      <div class="sidebar-card expert-card">
+        <div style="font-size:3rem;margin-bottom:.5rem;">👨‍🌾</div>
+        <h3>Talk to Our Expert</h3>
+        <p style="font-size:.82rem;opacity:.75;margin-top:.25rem;">Available Mon–Sat, 8AM–7PM</p>
+      </div>
+      <div class="sidebar-card">
+        <div class="contact-item"><span class="contact-icon">📞</span><div><div class="contact-label">CALL US DIRECTLY</div><strong>+91 94221 84071</strong></div></div>
+
+        <div class="contact-item"><span class="contact-icon">📍</span><div><div class="contact-label">VISIT OUR SHOP</div><strong>Cotton market ,khamgaon 444303</strong></div></div>
+      </div>
+
+      <div class="sidebar-card hours-card">
+        <h4>🕐 Business Hours</h4>
+        <div class="hours-row"><span>Mon – Fri</span><span><strong>8:00 AM – 7:00 PM</strong> <span class="open-badge">Open</span></span></div>
+        <div class="hours-row"><span>Saturday</span><span><strong>8:00 AM – 7:00 PM</strong></span></div>
+        <div class="hours-row"><span>Sunday</span><span><strong>9:00 AM – 1:00 PM</strong></span></div>
+      </div>
+    </aside>
+
+    <!-- Form -->
+    <div class="enquiry-main">
+      <% if (locals.success || (typeof submitted !== 'undefined' && submitted)) { %>
+      <!-- Success -->
+      <div class="success-box">
+        <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
+        <h2>Enquiry Submitted!</h2>
+        <p>Thank you! Our team will contact you within 24 hours.</p>
+        <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;">
+
+          <a href="/products" class="btn btn-ghost btn-sm">Browse Products</a>
+          <a href="/enquiry" class="btn btn-ghost btn-sm">New Enquiry</a>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="form-card">
+        <div class="form-card-head">
+          <span class="form-badge">FOR FARMERS</span>
+          <h2>Farmer Enquiry Form</h2>
+          <p>Fill this form and we'll call you back with the best product advice — no charges.</p>
+        </div>
+
+        <form method="POST" action="/enquiry" class="enquiry-form" novalidate>
+          <!-- Step 1 -->
+          <div class="form-step-label"><span class="step-num">1</span> YOUR DETAILS</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name <span class="req">*</span></label>
+              <input type="text" id="name" name="name" placeholder="e.g. Ramesh Patil"
+                     value="<%= locals.formData ? formData.name||'' : '' %>"
+                     class="<%= locals.errors && errors.name ? 'input-error':'' %>">
+              <% if (locals.errors && errors.name) { %><span class="field-error"><%= errors.name %></span><% } %>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"
+                     value="<%= locals.formData ? formData.phone||'' : '' %>"
+                     class="<%= locals.errors && errors.phone ? 'input-error':'' %>">
+              <% if (locals.errors && errors.phone) { %><span class="field-error"><%= errors.phone %></span><% } %>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="village">Village / Town <span class="req">*</span></label>
+            <input type="text" id="village" name="village" placeholder="e.g. Shirur, Pune"
+                   value="<%= locals.formData ? formData.village||'' : '' %>"
+                   class="<%= locals.errors && errors.village ? 'input-error':'' %>">
+            <% if (locals.errors && errors.village) { %><span class="field-error"><%= errors.village %></span><% } %>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="form-step-label"><span class="step-num">2</span> PRODUCT YOU'RE INTERESTED IN</div>
+          <div class="product-cat-tiles">
+            <label class="cat-tile"><input type="radio" name="_cat" value="organic"> 🌱 Organic Fertilizers</label>
+            <label class="cat-tile"><input type="radio" name="_cat" value="chemical"> 🧪 Chemical Fertilizers</label>
+            <label class="cat-tile"><input type="radio" name="_cat" value="pesticide"> 🌿 Pesticides</label>
+            <label class="cat-tile"><input type="radio" name="_cat" value="crop-protection"> 🛡️ Crop Protection</label>
+          </div>
+          <div class="form-group">
+            <label for="product">Specific Product <span class="req">*</span></label>
+            <select id="product" name="product" 
+                    class="<%= locals.errors && errors.product ? 'input-error':'' %>"
+                    data-preselect="<%= preselect %>"
+                    data-form-product="<%= locals.formData ? formData.product : '' %>">
+              <option value="">— Loading products... —</option>
+              <option value="Other">Other / Not Listed</option>
+            </select>
+            <% if (locals.errors && errors.product) { %><span class="field-error"><%= errors.product %></span><% } %>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="form-step-label"><span class="step-num">3</span> YOUR REQUIREMENT</div>
+          <div class="form-group">
+            <label for="crop">Current Crop <span style="font-weight:400;color:var(--text-light);">(optional)</span></label>
+            <input type="text" id="crop" name="crop" placeholder="e.g. Wheat, Sugarcane, Tomato"
+                   value="<%= locals.formData ? formData.crop||'' : '' %>">
+          </div>
+          <div class="form-group">
+            <label for="message">Message / Your Requirement <span class="req">*</span></label>
+            <textarea id="message" name="message" rows="4"
+                      placeholder="Describe what you need — e.g. quantity, problem with crop, or any question you have…"
+                      class="<%= locals.errors && errors.message ? 'input-error':'' %>"><%= locals.formData ? formData.message||'' : '' %></textarea>
+            <% if (locals.errors && errors.message) { %><span class="field-error"><%= errors.message %></span><% } %>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-full">📩 Submit Enquiry</button>
+        </form>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+<script src="/js/api.js"></script>
+<script src="/js/enquiry-api.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
