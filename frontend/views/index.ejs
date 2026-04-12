@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+ <div class="hero-scene">
+ <div class="hero-sky"></div>
+ <div class="hero-sun parallax-element"></div>
+ <div class="hero-hills">
+ <div class="hill hill-1"></div>
+ <div class="hill hill-2"></div>
+ <div class="hill hill-3"></div>
+ </div>
+ <div class="field-rows" id="fieldRows"></div>
+ </div>
+ 
+ <div class="container hero-grid">
+ <div class="hero-content">
+ <div class="hero-badge fade-up delay-1"> Maharashtra's Trusted Agro Store</div>
+ <h1 class="hero-title fade-up delay-2">Grow Smarter,<br><span class="hero-title-accent">Harvest More</span></h1>
+ <p class="hero-sub fade-up delay-3">Quality fertilizers, pesticides & expert advice — delivered to your doorstep. Trusted by <%= stats.farmers %>+ farmers across Pune, Nashik & Ahmednagar.</p>
+ 
+ <div class="hero-cta-group fade-up delay-4">
+ <a href="/products" class="btn btn-primary btn-lg hover-scale">Explore Products</a>
+ <a href="/enquiry" class="btn btn-outline-light btn-lg hover-scale">Get Free Advice</a>
+ </div>
+
+ <div class="hero-trust fade-up delay-5">
+ <div class="trust-avatars">
+ <img src="https://i.pravatar.cc/100?img=11" alt="Farmer">
+ <img src="https://i.pravatar.cc/100?img=12" alt="Farmer">
+ <img src="https://i.pravatar.cc/100?img=33" alt="Farmer">
+ </div>
+ <p>Trusted by <strong><%= stats.farmers %>+</strong> successful farmers.</p>
+ </div>
+ 
+ <div class="hero-stats fade-up delay-6" id="hero-stats-counter">
+ <div class="hero-stat"><div class="hero-stat-wrap"><span class="hero-stat-num count-up" data-target="<%= stats.farmers %>">0</span><span class="hero-stat-num-plus">+</span></div><span class="hero-stat-lbl">Happy Farmers</span></div>
+ <div class="hero-stat-div"></div>
+ <div class="hero-stat"><div class="hero-stat-wrap"><span class="hero-stat-num count-up" data-target="<%= stats.years %>">0</span><span class="hero-stat-num-plus">+</span></div><span class="hero-stat-lbl">Years Experience</span></div>
+ <div class="hero-stat-div"></div>
+ <div class="hero-stat"><div class="hero-stat-wrap"><span class="hero-stat-num count-up" data-target="<%= stats.dealers %>">0</span></div><span class="hero-stat-lbl">District Dealers</span></div>
+ <div class="hero-stat-div"></div>
+ <div class="hero-stat"><div class="hero-stat-wrap"><span class="hero-stat-num count-up" data-target="<%= stats.products %>">0</span><span class="hero-stat-num-plus">+</span></div><span class="hero-stat-lbl">Products</span></div>
+ </div>
+ </div>
+
+ <div class="hero-visual fade-up delay-7">
+ <div class="hero-visual-floating">
+ <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="hero-crop-svg">
+ <path fill="#4CAF50" d="M45.7,-76.4C58.9,-69.3,69.1,-55.3,77.4,-40.7C85.7,-26,92.1,-10.6,89.5,3.4C86.9,17.4,75.3,30,64.2,42.5C53.2,55.1,42.6,67.6,29.1,75.3C15.6,83.1,-0.8,86.1,-16.9,83.8C-33,81.5,-48.9,73.8,-59.5,61.5C-70.1,49.2,-75.4,32.3,-78.7,15.6C-82,-1.1,-83.4,-17.6,-78.2,-31.8C-73.1,-46,-61.4,-57.8,-48,-64.8C-34.6,-71.8,-17.3,-74.1,-0.1,-74C17.1,-73.9,32.5,-83.5,45.7,-76.4Z" transform="translate(100 100) scale(1.1)" opacity="0.8"/>
+ <path fill="#C8E6C9" d="M37,-63.3C49.1,-56.9,60.8,-48.6,69.5,-37.4C78.2,-26.3,83.9,-12.3,83.3,1.4C82.7,15.1,75.7,28.5,67.1,41.2C58.5,53.8,48.2,65.8,35.1,72.6C22,79.5,6.1,81.3,-8.6,78.2C-23.4,75.2,-37.1,67.3,-48.5,56.8C-59.8,46.3,-68.9,33.2,-74.2,18.8C-79.6,4.5,-81.2,-11,-75.3,-23.5C-69.4,-36,-56.1,-45.5,-43.3,-51.7C-30.5,-57.9,-18.2,-60.8,-3.2,-55C11.8,-49.2,24.9,-69.6,37,-63.3Z" transform="translate(100 100) scale(0.9)" opacity="0.6"/>
+ <g transform="translate(80 50) scale(1.6)">
+ <path fill="#1a4d2e" d="M12.98,24.23L12.98,24.23C5.54,23.36 0,17.06 0,9.54V0l0,0c9.41,0 17.05,7.63 17.05,17.05C17.05,20.08 15.35,22.75 12.98,24.23Z"/>
+ <path fill="#3d9457" d="M23.01,24.23L23.01,24.23c7.43,-0.87 12.98,-7.18 12.98,-14.7V0l0,0C26.58,0 18.94,7.63 18.94,17.05C18.94,20.08 20.64,22.75 23.01,24.23Z"/>
+ <path fill="#4caf6f" d="M18,34V15c0,-1.65 -1.35,-3 -3,-3h0c-1.65,0 -3,1.35 -3,3v19c0,0.55 0.45,1 1,1h4C17.55,35 18,34.55 18,34z"/>
+ </g>
+ </svg>
+ </div>
+ </div>
+ </div>
+
+ <div class="hero-scroll-indicator">
+ <a href="#categories">
+ <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+ </a>
+ </div>
+</section>
+
+<!-- Categories Section -->
+<section class="section bg-light" id="categories">
+ <div class="container">
+ <div class="section-header">
+ <div class="section-badge"> What We Offer</div>
+ <h2 class="section-title">Our Product Categories</h2>
+ <p class="section-sub">Everything your farm needs, sourced from trusted manufacturers.</p>
+ </div>
+ <div class="cat-grid fade-up delay-2">
+ <a href="/products?filter=organic" class="cat-card cat-card-organic">
+   <div class="cat-bg-pattern">
+     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+   </div>
+   <div class="cat-icon-wrap">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+   </div>
+   <h3>Organic Fertilizers</h3>
+   <p>Bio-NPK, vermicompost, neem-based products for sustainable farming.</p>
+   <span class="cat-link">Explore Category <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+ </a>
+ <a href="/products?filter=chemical" class="cat-card cat-card-chemical">
+   <div class="cat-bg-pattern">
+     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg>
+   </div>
+   <div class="cat-icon-wrap">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg>
+   </div>
+   <h3>Chemical Fertilizers</h3>
+   <p>Urea, DAP, MOP and micronutrients for maximum crop yield.</p>
+   <span class="cat-link">Explore Category <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+ </a>
+ <a href="/products?filter=pesticide" class="cat-card cat-card-pesticide">
+   <div class="cat-bg-pattern">
+     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+   </div>
+   <div class="cat-icon-wrap">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+   </div>
+   <h3>Pesticides</h3>
+   <p>Approved insecticides and fungicides to protect your crops.</p>
+   <span class="cat-link">Explore Category <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+ </a>
+ <a href="/products?filter=crop-protection" class="cat-card cat-card-protection">
+   <div class="cat-bg-pattern">
+     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M12 20v2"/><path d="M5.5 5.5l1.5 1.5"/><path d="M17 17l1.5 1.5"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M5.5 18.5l1.5-1.5"/><path d="M17 7l1.5-1.5"/><circle cx="12" cy="12" r="5"/></svg>
+   </div>
+   <div class="cat-icon-wrap">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22a8 8 0 1 1 16 0"/><path d="M14 14l2.5-2.5a6.5 6.5 0 0 0-9.19-9.19L4.81 4.81"/></svg>
+   </div>
+   <h3>Crop Protection</h3>
+   <p>Growth regulators, weedicides, and harvest protection solutions.</p>
+   <span class="cat-link">Explore Category <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+ </a>
+ </div>
+ </div>
+</section>
+
+
+
+<!-- Why Choose Us -->
+<section class="section bg-light">
+ <div class="container">
+ <div class="section-header">
+ <div class="section-badge"> Why Trishul</div>
+ <h2 class="section-title">Why Farmers Trust Us</h2>
+ </div>
+ <div class="why-scroll fade-up delay-2">
+ 
+ <div class="why-card">
+ <div class="cat-bg-pattern"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+ <div class="why-card-num">01</div>
+ <div class="why-icon-wrap" style="background:#E8F5E9; color:#2E7D32;">
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+ </div>
+ <h4>Genuine Products</h4>
+ <p>Every product is sourced directly from authorised companies — 100% authentic.</p>
+ </div>
+
+ <div class="why-card">
+ <div class="cat-bg-pattern"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+ <div class="why-card-num">02</div>
+ <div class="why-icon-wrap" style="background:#E3F2FD; color:#1565C0;">
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+ </div>
+ <h4>Expert Agronomy Advice</h4>
+ <p>Free consultation from experienced agronomists to help you choose the right product.</p>
+ </div>
+
+ <div class="why-card">
+ <div class="cat-bg-pattern"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18H3"/></svg></div>
+ <div class="why-card-num">03</div>
+ <div class="why-icon-wrap" style="background:#FFF8E1; color:#FF8F00;">
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+ </div>
+ <h4>Dealer Network</h4>
+ <p><%= stats.dealers %> local dealers — get products close to your farm.</p>
+ </div>
+
+ <div class="why-card">
+ <div class="cat-bg-pattern"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+ <div class="why-card-num">04</div>
+ <div class="why-icon-wrap" style="background:#FCE4EC; color:#C2185B;">
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+ </div>
+ <h4>Fair Pricing</h4>
+ <p>Competitive prices with seasonal discounts and bulk order benefits.</p>
+ </div>
+ 
+ </div>
+ </div>
+</section>
+
+
+
+<%- include('partials/footer') %>
+<script src="/js/api.js"></script>
+<script src="/js/products-api.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

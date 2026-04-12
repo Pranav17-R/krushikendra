@@ -1,0 +1,26 @@
+<%# views/partials/navbar.ejs – shared navigation %>
+<nav class="navbar">
+ <div class="container nav-container">
+ <a href="/" class="brand">
+ <div class="brand-logo"></div>
+ <div class="brand-text">
+ <span class="brand-name">Trishul Krushi Kendra</span>
+ <span class="brand-tagline">Agricultural Retail Store</span>
+ </div>
+ </a>
+ <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+ <ul class="nav-links" id="navLinks">
+ <li><a href="/" class="nav-link <%= activePage==='home' ? 'active':'' %>">Home</a></li>
+ <li><a href="/products" class="nav-link <%= activePage==='products' ? 'active':'' %>">Products</a></li>
+ <li><a href="/dealers" class="nav-link <%= activePage==='dealers' ? 'active':'' %>">Dealers</a></li>
+ <li><a href="/become-dealer" class="nav-link <%= activePage==='become-dealer' ? 'active':'' %>">Become Dealer</a></li>
+ <li><a href="/enquiry" class="nav-link active-pill <%= activePage==='enquiry' ? 'active':'' %>">Enquiry</a></li>
+ </ul>
+
+ </div>
+</nav>
+<script>
+ document.getElementById('navToggle')?.addEventListener('click', () => {
+ document.getElementById('navLinks')?.classList.toggle('open');
+ });
+</script>

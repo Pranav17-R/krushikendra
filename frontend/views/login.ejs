@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('partials/head') %>
+ <style>
+ body { background:#f0f4f1; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+ .login-wrapper { width:100%; max-width:400px; padding:2rem; }
+ .login-card { background:#fff; border-radius:18px; padding:2rem 2.5rem; box-shadow:0 15px 40px rgba(0,0,0,.08); border:1px solid #e4e8e4; }
+ .login-head { text-align:center; margin-bottom:1.5rem; }
+ .login-logo { font-size:3rem; margin-bottom:.5rem; }
+ .login-head h1 { font-size:1.4rem; font-weight:800; color:#1a1f1b; letter-spacing:-.02em; }
+ .login-head p { font-size:.85rem; color:#6b7a6d; margin-top:.2rem; }
+ .form-group { margin-bottom:1.25rem; }
+ .form-group label { display:block; font-size:.8rem; font-weight:600; color:#6b7a6d; margin-bottom:.4rem; }
+ .form-control { width:100%; padding:.75rem 1rem; border:1.5px solid #e4e8e4; border-radius:10px; font-family:inherit; font-size:.9rem; transition:border-color .2s; }
+ .form-control:focus { outline:none; border-color:#1a4d2e; }
+ .btn-login { display:block; width:100%; padding:.8rem; background:linear-gradient(135deg,#1a4d2e,#2d7a44); color:#fff; font-weight:700; font-size:.95rem; border:none; border-radius:10px; cursor:pointer; transition:transform .15s, box-shadow .15s; margin-top:1.5rem; }
+ .btn-login:hover { transform:translateY(-1px); box-shadow:0 5px 15px rgba(26,77,46,.3); }
+ .btn-login:disabled { opacity:.7; cursor:not-allowed; transform:none; }
+ .back-link { display:block; text-align:center; font-size:.8rem; font-weight:600; color:#6b7a6d; text-decoration:none; margin-top:1.5rem; }
+ .back-link:hover { color:#1a4d2e; }
+ #errorMsg { color:#991b1b; background:#fee2e2; padding:.6rem; border-radius:8px; font-size:.8rem; font-weight:600; text-align:center; margin-bottom:1rem; display:none; }
+ </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+ <div class="login-card fade-in">
+ <div class="login-head">
+ <div class="login-logo"></div>
+ <h1>Admin Secure Login</h1>
+ <p>Enter your credentials to access the dashboard</p>
+ </div>
+
+ <div id="errorMsg"></div>
+
+ <form id="loginForm">
+ <div class="form-group">
+ <label for="username">Username</label>
+ <input type="text" id="username" class="form-control" placeholder="Enter username" required autofocus>
+ </div>
+ <div class="form-group">
+ <label for="password">Password</label>
+ <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+ </div>
+ <button type="submit" class="btn-login" id="submitBtn">Sign In</button>
+ </form>
+
+ <a href="/" class="back-link">← Return to Website</a>
+ </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+ document.getElementById('loginForm').addEventListener('submit', async (e) => {
+ e.preventDefault();
+ const btn = document.getElementById('submitBtn');
+ const err = document.getElementById('errorMsg');
+ 
+ const user = document.getElementById('username').value;
+ const pass = document.getElementById('password').value;
+ 
+ btn.disabled = true;
+ btn.textContent = 'Verifying...';
+ err.style.display = 'none';
+
+ try {
+ const res = await fetch('/api/v1/admin/login', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ username: user, password: pass })
+ });
+ 
+ const data = await res.json();
+ 
+ if (res.ok && data.success) {
+ // Save the JWT token
+ localStorage.setItem('adminToken', data.token);
+ // Optionally save username
+ localStorage.setItem('adminUser', data.username);
+ 
+ btn.textContent = 'Success!';
+ btn.style.background = '#166534';
+ 
+ // Redirect to dashboard
+ setTimeout(() => {
+ window.location.href = '/admin';
+ }, 300);
+ } else {
+ err.textContent = data.message || 'Invalid credentials';
+ err.style.display = 'block';
+ btn.disabled = false;
+ btn.textContent = 'Sign In';
+ }
+ } catch (error) {
+ err.textContent = 'Network error. Cannot reach server.';
+ err.style.display = 'block';
+ btn.disabled = false;
+ btn.textContent = 'Sign In';
+ }
+ });
+</script>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

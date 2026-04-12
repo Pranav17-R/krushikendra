@@ -31,9 +31,9 @@ connectDB().then((conn) => {
   }
 });
 
-// ── View engine ────────────────────────────────
+// ── View engine (EJS templates live in /frontend/views) ──
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '../frontend/views'));
 
 // ── CORS ───────────────────────────────────────
 app.use(cors({
@@ -42,8 +42,8 @@ app.use(cors({
   credentials: true,
 }));
 
-// ── Static assets ──────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
+// ── Static assets (CSS/JS/images live in /frontend/public) ──
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 // ── Fix MIME types for static files ────────────
 app.use((req, res, next) => {
@@ -79,7 +79,7 @@ app.use(errorHandler);
 
 // ── Start ──────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`🌾 Trishul Krushi Kendra running at http://localhost:${PORT}`);
+  console.log(` Trishul Krushi Kendra running at http://localhost:${PORT}`);
   console.log(`   Environment : ${process.env.NODE_ENV || 'development'}`);
 });
 

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('partials/head') %>
+ <style>
+ /* Admin-specific overrides */
+ body { background:#f0f4f1; }
+ .topbar { position:fixed;top:0;left:0;right:0;height:60px;z-index:200;background:#1a4d2e;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.25); }
+ .topbar-logo { display:flex;align-items:center;gap:.75rem;color:#fff;font-size:1rem;font-weight:700; }
+ .topbar-logo small { display:block;font-size:.68rem;font-weight:400;opacity:.6; }
+ .topbar-right { display:flex;align-items:center;gap:.75rem; }
+ .avatar { width:34px;height:34px;background:#4caf6f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem; }
+ .topbar-back { background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:.35rem .9rem;border-radius:8px;font-size:.8rem;cursor:pointer;text-decoration:none; }
+ .sidebar { position:fixed;top:60px;left:0;bottom:0;width:230px;background:#162b1e;overflow-y:auto;padding:1.25rem 0 2rem;z-index:100; }
+ .sid-label { font-size:.65rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;padding:.9rem 1.2rem .3rem; }
+ .sid-item { display:flex;align-items:center;gap:.65rem;padding:.75rem 1.2rem;color:rgba(255,255,255,.6);font-size:.85rem;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:all .18s; }
+ .sid-item:hover { background:rgba(255,255,255,.06);color:#fff; }
+ .sid-item.active { background:rgba(76,175,111,.15);color:#fff;border-left-color:#4caf6f; }
+ .sid-badge { margin-left:auto;background:#f59e0b;color:#fff;border-radius:20px;padding:1px 7px;font-size:.65rem;font-weight:700; }
+ .admin-main { margin-left:230px;padding-top:60px;min-height:100vh; }
+ .a-section { display:none;padding:1.75rem 2rem; }
+ .a-section.active { display:block; }
+ .s-topbar { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem; }
+ .s-title { font-size:1.25rem;font-weight:700; }
+ .s-sub { font-size:.8rem;color:#6b7a6d;margin-top:.2rem; }
+ .stats { display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem; }
+ .stat { background:#fff;border-radius:12px;padding:1.2rem;border:1px solid #e4e8e4;display:flex;align-items:center;gap:1rem; }
+ .stat-ic { width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem; }
+ .stat-val { font-size:1.7rem;font-weight:800;line-height:1; }
+ .stat-lbl { font-size:.75rem;color:#6b7a6d;margin-top:2px; }
+ .stat-trend { font-size:.7rem;margin-top:3px; }
+ .acard { background:#fff;border-radius:12px;border:1px solid #e4e8e4;overflow:hidden; }
+ .acard-head { display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;border-bottom:1px solid #e4e8e4; }
+ .acard-title { font-weight:600;font-size:.9rem; }
+ .acard-body { overflow-x:auto; }
+ table { width:100%;border-collapse:collapse;font-size:.84rem; }
+ th { padding:.65rem 1rem;background:#f7faf7;text-align:left;font-size:.68rem;color:#6b7a6d;letter-spacing:.08em;text-transform:uppercase;font-weight:600; }
+ td { padding:.8rem 1rem;border-top:1px solid #f2f4f2;vertical-align:middle; }
+ tr:hover td { background:#fafcfa; }
+ .chip { display:inline-flex;align-items:center;padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:700; }
+ .chip-green { background:#dcfce7;color:#166534; } .chip-amber { background:#fef3c7;color:#92400e; }
+ .chip-blue { background:#dbeafe;color:#1e40af; } .chip-red { background:#fee2e2;color:#991b1b; }
+ .acts { display:flex;gap:5px; }
+ .ab { padding:.28rem .6rem;border-radius:6px;font-size:.75rem;font-weight:600;border:none;cursor:pointer;transition:all .15s; }
+ .ab-edit { background:#dbeafe;color:#1e40af; } .ab-del { background:#fee2e2;color:#991b1b; }
+ .ab-ok { background:#dcfce7;color:#166534; } .ab-rej { background:#fef3c7;color:#92400e; }
+ .filter-row { display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem; }
+ .fchip { padding:.3rem .85rem;border-radius:20px;border:1.5px solid #e4e8e4;background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s; }
+ .fchip.active { background:#1a4d2e;color:#fff;border-color:#1a4d2e; }
+ .sbx { display:flex;align-items:center;gap:.5rem;background:#fff;border:1.5px solid #e4e8e4;border-radius:10px;padding:.45rem .85rem;flex:1;max-width:320px; }
+ .sbx input { border:none;outline:none;font-family:inherit;font-size:.84rem;width:100%; }
+ .btn-adm { display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:9px;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .2s; }
+ .btn-adm-p { background:linear-gradient(135deg,#1a4d2e,#2d7a44);color:#fff; }
+ .btn-adm-g { background:#f4f6f4;color:#1a1f1b; }
+ .prod-cell { display:flex;align-items:center;gap:.65rem; }
+ .prod-em { width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem; }
+ .modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:1rem; }
+ .modal-overlay.open { display:flex; }
+ .modal { background:#fff;border-radius:18px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;animation:mIn .25s cubic-bezier(.34,1.56,.64,1); }
+ @keyframes mIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+ .modal-head { display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid #e4e8e4; }
+ .modal-head h3 { font-size:1rem;font-weight:700; }
+ .modal-close { background:none;border:none;font-size:1.2rem;cursor:pointer;color:#6b7a6d; }
+ .modal-body { padding:1.5rem;display:grid;gap:1rem; }
+ .mf-row { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
+ .mf { display:flex;flex-direction:column;gap:.35rem; }
+ .mf label { font-size:.78rem;font-weight:600;color:#6b7a6d; }
+ .mf input,.mf select,.mf textarea { padding:.65rem .85rem;border:1.5px solid #e4e8e4;border-radius:9px;font-family:inherit;font-size:.88rem;background:#fafafa;width:100%; }
+ .mf input:focus,.mf select:focus,.mf textarea:focus { outline:none;border-color:#2d7a44;background:#fff; }
+ .mf textarea { resize:vertical;min-height:72px; }
+ .modal-foot { display:flex;justify-content:flex-end;gap:.5rem;padding:1rem 1.5rem;border-top:1px solid #e4e8e4;background:#fafcfa; }
+ .toast { position:fixed;bottom:1.5rem;right:1.5rem;background:#1a4d2e;color:#fff;padding:.75rem 1.25rem;border-radius:10px;font-size:.85rem;font-weight:600;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none; }
+ .toast.show { opacity:1;transform:translateY(0); }
+ .dash-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.25rem; }
+ </style>
+ <script>
+ if (!localStorage.getItem('adminToken')) {
+ window.location.href = '/admin/login';
+ }
+ </script>
+</head>
+<body>
+
+<div class="topbar">
+ <div class="topbar-logo"> <div>Trishul Krushi Kendra <small>Admin Dashboard</small></div></div>
+ <div class="topbar-right">
+ <div class="avatar">�</div>
+ <span style="color:rgba(255,255,255,.75);font-size:.82rem;">Admin</span>
+ <a href="#" onclick="logout(event)" class="topbar-back" style="background:#991b1b;border-color:#7f1d1d;">Log Out</a>
+ <a href="/" class="topbar-back">← Back to Site</a>
+ </div>
+</div>
+
+<aside class="sidebar">
+ <div class="sid-label">Main</div>
+ <div class="sid-item active" data-sec="secDash"><span>�</span><span>Dashboard</span></div>
+ <div class="sid-label">Catalogue</div>
+ <div class="sid-item" data-sec="secProducts"><span></span><span>Manage Products</span></div>
+ <div class="sid-label">Engagement</div>
+ <div class="sid-item" data-sec="secEnquiries"><span></span><span>Farmer Enquiries</span><span class="sid-badge" id="badgeEnq" style="display:none"></span></div>
+ <div class="sid-item" data-sec="secDealers"><span>�</span><span>Dealers</span></div>
+ <div class="sid-item" data-sec="secApps"><span>�</span><span>Dealer Applications</span><span class="sid-badge" id="badgeApp" style="display:none"></span></div>
+</aside>
+
+<main class="admin-main">
+
+<div class="a-section active" id="secDash">
+ <div class="s-topbar"><div><div class="s-title">Dashboard Overview</div><div class="s-sub">Welcome back, Admin</div></div></div>
+ <div class="stats">
+ <div class="stat"><div class="stat-ic" style="background:#dcfce7"></div><div><div class="stat-val"><%= stats.products %></div><div class="stat-lbl">Total Products</div></div></div>
+ <div class="stat"><div class="stat-ic" style="background:#dbeafe"></div><div><div class="stat-val"><%= stats.enquiries %></div><div class="stat-lbl">Enquiries</div><div class="stat-trend" style="color:#3b82f6;">● 3 new</div></div></div>
+ <div class="stat"><div class="stat-ic" style="background:#fef3c7">�</div><div><div class="stat-val"><%= stats.dealers %></div><div class="stat-lbl">Active Dealers</div></div></div>
+ <div class="stat"><div class="stat-ic" style="background:#fee2e2">�</div><div><div class="stat-val"><%= stats.applications %></div><div class="stat-lbl">Pending Applications</div></div></div>
+ </div>
+ <div class="dash-grid">
+ <div class="acard">
+ <div class="acard-head"><span class="acard-title"> Recent Enquiries</span><button class="btn-adm btn-adm-g" style="font-size:.75rem;" onclick="nav('secEnquiries')">View All →</button></div>
+ <div class="acard-body"><table><thead><tr><th>Farmer</th><th>Product</th><th>Status</th></tr></thead><tbody id="dashEnqTbody">
+ </tbody></table></div>
+ </div>
+ <div class="acard">
+ <div class="acard-head"><span class="acard-title">� Dealer Applications</span><button class="btn-adm btn-adm-g" style="font-size:.75rem;" onclick="nav('secApps')">View All →</button></div>
+ <div class="acard-body"><table><thead><tr><th>Applicant</th><th>Village</th><th>Status</th></tr></thead><tbody id="dashAppTbody">
+ </tbody></table></div>
+ </div>
+ </div>
+</div>
+
+<div class="a-section" id="secProducts">
+ <div class="s-topbar">
+ <div><div class="s-title">Manage Products</div><div class="s-sub">Add, edit, or remove products from the catalogue</div></div>
+ <button class="btn-adm btn-adm-p" onclick="openProductModal()">＋ Add Product</button>
+ </div>
+ <div class="filter-row">
+ <div class="sbx"><span></span><input id="prodSearch" placeholder="Search products…" oninput="filterProds()"></div>
+ <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+ <div class="fchip active" data-pf="all" onclick="setProdFilter(this)">All</div>
+ <div class="fchip" data-pf="Organic Fertilizer" onclick="setProdFilter(this)"> Organic</div>
+ <div class="fchip" data-pf="Chemical Fertilizer" onclick="setProdFilter(this)"> Chemical</div>
+ <div class="fchip" data-pf="Pesticide" onclick="setProdFilter(this)"> Pesticides</div>
+ <div class="fchip" data-pf="Crop Protection" onclick="setProdFilter(this)"> Protection</div>
+ </div>
+ </div>
+ <div class="acard"><div class="acard-head"><span class="acard-title">Product Catalogue</span><span id="prodCount" style="font-size:.78rem;color:#6b7a6d;"></span></div>
+ <div class="acard-body"><table><thead><tr><th>#</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="prodTbody"></tbody></table></div></div>
+</div>
+
+<div class="a-section" id="secEnquiries">
+ <div class="s-topbar"><div><div class="s-title">Farmer Enquiries</div><div class="s-sub">Review and respond to enquiries</div></div><span class="chip chip-blue" style="padding:.45rem 1rem;font-size:.82rem;">24 Total · 3 New</span></div>
+ <div class="filter-row">
+ <div class="sbx"><span></span><input id="enqSearch" placeholder="Search farmer…" oninput="filterEnq()"></div>
+ <div style="display:flex;gap:.4rem;">
+ <div class="fchip active" data-ef="all" onclick="setEnqFilter(this)">All</div>
+ <div class="fchip" data-ef="new" onclick="setEnqFilter(this)">� New</div>
+ <div class="fchip" data-ef="seen" onclick="setEnqFilter(this)">� Seen</div>
+ <div class="fchip" data-ef="replied" onclick="setEnqFilter(this)">� Replied</div>
+ </div>
+ </div>
+ <div class="acard"><div class="acard-head"><span class="acard-title">All Enquiries</span></div>
+ <div class="acard-body"><table><thead><tr><th>#</th><th>Farmer</th><th>Phone</th><th>Village</th><th>Product</th><th>Crop</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="enqTbody"></tbody></table></div></div>
+</div>
+
+<div class="a-section" id="secDealers">
+ <div class="s-topbar"><div><div class="s-title">Dealer Management</div><div class="s-sub">Manage your authorised dealer network</div></div><span class="chip chip-green" style="padding:.45rem 1rem;font-size:.82rem;"><%= stats.dealers %> Active</span></div>
+ <div class="acard"><div class="acard-head"><span class="acard-title">Authorised Dealers</span></div>
+ <div class="acard-body"><table><thead><tr><th>#</th><th>Dealer</th><th>Village</th><th>District</th><th>Contact</th><th>Since</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dealerTbody"></tbody></table></div></div>
+</div>
+
+<div class="a-section" id="secApps">
+ <div class="s-topbar"><div><div class="s-title">Dealer Applications</div><div class="s-sub">Approve or reject new dealership applications</div></div><span class="chip chip-amber" style="padding:.45rem 1rem;font-size:.82rem;"><%= stats.applications %> Pending</span></div>
+ <div class="acard"><div class="acard-head"><span class="acard-title">All Applications</span></div>
+ <div class="acard-body"><table><thead><tr><th>#</th><th>Applicant</th><th>Phone</th><th>Village</th><th>Shop</th><th>Experience</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="appTbody"></tbody></table></div></div>
+</div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="prodModal">
+ <div class="modal">
+ <div class="modal-head"><h3 id="modalTitle">Add Product</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+ <div class="modal-body">
+ <input type="hidden" id="editIdx" value="">
+ <div class="mf-row">
+ <div class="mf"><label>Product Name *</label><input id="mName" placeholder="e.g. Urea Premium"></div>
+ <div class="mf"><label>Category *</label><select id="mCat"><option value="">Select…</option><option>Organic Fertilizer</option><option>Chemical Fertilizer</option><option>Pesticide</option><option>Crop Protection</option></select></div>
+ </div>
+ <div class="mf-row">
+ <div class="mf"><label>Price (₹ per bag)</label><input id="mPrice" type="number" min="0" placeholder="e.g. 1250"></div>
+ <div class="mf"><label>Stock Status</label><select id="mStock"><option>In Stock</option><option>Low Stock</option><option>Out of Stock</option></select></div>
+ </div>
+ <div class="mf-row">
+ <div class="mf"><label>Company</label><input id="mCompany" placeholder="e.g. Indian Farmers Fertilizer"></div>
+ <div class="mf"><label>Visibility</label><select id="mStatus"><option>Active</option><option>Inactive</option></select></div>
+ </div>
+ <div class="mf"><label>Description *</label><textarea id="mDesc" placeholder="Short product description (shown on product cards)..." style="min-height:80px;"></textarea></div>
+ <div class="mf"><label>Key Benefits</label><textarea id="mBenefits" placeholder="Enter benefits separated by commas (e.g. Improves soil fertility, Increases yield, Organic formula)..." style="min-height:60px;"></textarea></div>
+ <div class="mf"><label>Tags</label><input id="mTags" placeholder="Enter tags separated by commas (e.g. organic, liquid, high-nitrogen)"></div>
+ <div class="mf"><label>Product Image</label><input type="file" id="mImage" accept="image/png, image/jpeg, image/webp" style="padding:.4rem;"></div>
+ </div>
+ <div class="modal-foot">
+ <button class="btn-adm btn-adm-g" onclick="closeModal()">Cancel</button>
+ <button class="btn-adm btn-adm-p" onclick="saveProduct()">� Save Product</button>
+ </div>
+ </div>
+</div>
+
+<!-- Enquiry Reply Modal -->
+<div class="modal-overlay" id="enqModal">
+ <div class="modal" style="max-width:600px;">
+ <div class="modal-head"><h3 id="enqModalTitle">Reply to Farmer Enquiry</h3><button class="modal-close" onclick="closeEnqModal()">✕</button></div>
+ <div class="modal-body">
+ <input type="hidden" id="enqIdx" value="">
+ <div class="enq-details" style="background:#f8faf8;border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+ <div class="mf-row">
+ <div class="mf"><label>Farmer Name</label><div id="enqName" style="font-weight:600;color:#1a4d2e;"></div></div>
+ <div class="mf"><label>Phone</label><div id="enqPhone" style="font-weight:600;"></div></div>
+ </div>
+ <div class="mf-row">
+ <div class="mf"><label>Village</label><div id="enqVillage" style="font-weight:600;"></div></div>
+ <div class="mf"><label>Product</label><div id="enqProduct" style="font-weight:600;"></div></div>
+ </div>
+ <div class="mf" style="margin-top:1rem;"><label>Farmer's Message</label><div id="enqMessage" style="background:white;border:1px solid #e5e7eb;border-radius:6px;padding:0.75rem;margin-top:0.5rem;"></div></div>
+ </div>
+ <div class="mf"><label>Reply Message *</label><textarea id="enqReply" placeholder="Type your response to the farmer..." style="min-height:120px;"></textarea></div>
+ <div class="mf"><label>Admin Note (Internal)</label><textarea id="enqAdminNote" placeholder="Internal notes about this enquiry..." style="min-height:60px;"></textarea></div>
+ </div>
+ <div class="modal-foot">
+ <button class="btn-adm btn-adm-g" onclick="closeEnqModal()">Cancel</button>
+ <button class="btn-adm btn-adm-p" onclick="sendEnqReply()">� Send Reply</button>
+ </div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let PRODUCTS = [], ENQ = [], DLR = [], APPS = [];
+const catEmoji={'Organic Fertilizer':'','Chemical Fertilizer':'','Pesticide':'','Crop Protection':''};
+function chipClass(s){return {'Active':'chip-green','active':'chip-green','Approved':'chip-green','approved':'chip-green','Replied':'chip-green','replied':'chip-green','In Stock':'chip-green','in stock':'chip-green','Pending':'chip-amber','pending':'chip-amber','Review':'chip-amber','review':'chip-amber','Low Stock':'chip-amber','low stock':'chip-amber','New':'chip-blue','new':'chip-blue','Out of Stock':'chip-red','out of stock':'chip-red','Rejected':'chip-red','rejected':'chip-red','Inactive':'chip-red','inactive':'chip-red'}[s]||'chip-blue';}
+function toast(m,d=2600){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function nav(id){document.querySelectorAll('.sid-item').forEach(i=>i.classList.remove('active'));document.querySelector(`[data-sec="${id}"]`)?.classList.add('active');document.querySelectorAll('.a-section').forEach(s=>s.classList.remove('active'));document.getElementById(id)?.classList.add('active');}
+function logout(e){e.preventDefault();localStorage.removeItem('adminToken');localStorage.removeItem('adminUser');window.location.href='/admin/login';}
+document.querySelectorAll('.sid-item').forEach(i=>i.addEventListener('click',()=>nav(i.dataset.sec)));
+
+const token = localStorage.getItem('adminToken');
+
+// Fetch Helpers
+async function fetchAdminData(endpoint) {
+ try {
+ const res = await fetch(`/api/v1/${endpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
+ const data = await res.json();
+ return data.success ? data.data : [];
+ } catch(e) { console.error(e); return []; }
+}
+
+// Products
+let prodFilter='all',prodSearch='';
+async function initProds() {
+ PRODUCTS = await fetchAdminData('products');
+ renderProds();
+}
+function renderProds(){
+ let list=PRODUCTS.map((p,i)=>({...p,_i:i}));
+ if(prodFilter!=='all') list=list.filter(p=>p.categoryLabel===prodFilter);
+ if(prodSearch){const q=prodSearch.toLowerCase();list=list.filter(p=>p.name.toLowerCase().includes(q)||p.categoryLabel.toLowerCase().includes(q));}
+ const tb=document.getElementById('prodTbody');
+ document.getElementById('prodCount').textContent=`${list.length} product${list.length!==1?'s':''}`;
+ if(!list.length){tb.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:2rem;color:#aaa;">No products found.</td></tr>`;return;}
+ tb.innerHTML=list.map((p,n)=>`<tr data-pi="${p._i}"><td style="color:#6b7a6d;">${n+1}</td><td><div class="prod-cell"><div class="prod-em" style="background:#f0f4f1">${p.image ? `<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` : (catEmoji[p.categoryLabel]||'')}</div><div><strong>${p.name}</strong><div style="font-size:.72rem;color:#6b7a6d;">${p.company||'No company'}</div></div></div></td><td><span class="chip ${chipClass(p.categoryLabel)}">${p.categoryLabel}</span></td><td style="color:#6b7a6d;font-weight:600;">${p.price ? '₹' + p.price.toLocaleString('en-IN') : '-'}</td><td><span class="chip ${chipClass(p.stock)}">${p.stock}</span></td><td><span class="chip ${chipClass(p.status)}">${p.status}</span></td><td><div class="acts"><button class="ab ab-edit" onclick="openProductModal(${p._i})">✏ Edit</button><button class="ab ab-del" onclick="delProd(${p._i})"></button></div></td></tr>`).join('');
+}
+function filterProds(){prodSearch=document.getElementById('prodSearch').value.trim();renderProds();}
+function setProdFilter(el){document.querySelectorAll('[data-pf]').forEach(e=>e.classList.remove('active'));el.classList.add('active');prodFilter=el.dataset.pf;renderProds();}
+async function delProd(i){
+ const p = PRODUCTS[i];
+ if(!confirm(`Delete "${p.name}"?`))return;
+ await fetch(`/api/v1/products/${p._id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+ PRODUCTS.splice(i,1); renderProds(); toast(' Product deleted.');
+}
+function openProductModal(idx=''){document.getElementById('editIdx').value=idx;const p=idx!==''?PRODUCTS[idx]:{};document.getElementById('modalTitle').textContent=idx!==''?'Edit Product':'Add Product';document.getElementById('mName').value=p.name||'';document.getElementById('mCat').value=p.categoryLabel||'';document.getElementById('mPrice').value=p.price||'';document.getElementById('mStock').value=p.stock||'In Stock';document.getElementById('mCompany').value=p.company||'';document.getElementById('mStatus').value=p.status||'Active';document.getElementById('mDesc').value=p.description||'';document.getElementById('mBenefits').value=(p.benefits||[]).join(', ');document.getElementById('mTags').value=(p.tags||[]).join(', ');document.getElementById('prodModal').classList.add('open');}
+function closeModal(){document.getElementById('prodModal').classList.remove('open');}
+async function saveProduct(){
+ const name=document.getElementById('mName').value.trim(), catLbl=document.getElementById('mCat').value, desc=document.getElementById('mDesc').value.trim();
+ if(!name||!catLbl||!desc){toast('⚠ Name, category and description are required.');return;}
+ const catMap = { 'Organic Fertilizer':'organic', 'Chemical Fertilizer':'chemical', 'Pesticide':'pesticide', 'Crop Protection':'crop-protection' };
+ const fd = new FormData();
+ fd.append('name', name); fd.append('category', catMap[catLbl] || 'organic');
+ fd.append('price', document.getElementById('mPrice').value || '');
+ fd.append('stock', document.getElementById('mStock').value);
+ fd.append('company', document.getElementById('mCompany').value.trim() || '');
+ fd.append('status', document.getElementById('mStatus').value.toLowerCase());
+ fd.append('description', desc);
+ 
+ // Handle benefits and tags - convert comma-separated strings to arrays
+ const benefitsText = document.getElementById('mBenefits').value.trim();
+ const tagsText = document.getElementById('mTags').value.trim();
+ if (benefitsText) {
+ const benefits = benefitsText.split(',').map(b => b.trim()).filter(b => b.length > 0);
+ fd.append('benefits', JSON.stringify(benefits));
+ }
+ if (tagsText) {
+ const tags = tagsText.split(',').map(t => t.trim()).filter(t => t.length > 0);
+ fd.append('tags', JSON.stringify(tags));
+ }
+ 
+ const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+ fd.append('slug', slug);
+ const fileInput = document.getElementById('mImage');
+ if (fileInput.files[0]) fd.append('image', fileInput.files[0]);
+
+ const idx=document.getElementById('editIdx').value;
+ const isEdit = idx !== '';
+ const method = isEdit ? 'PUT' : 'POST';
+ const url = isEdit ? `/api/v1/products/${PRODUCTS[idx]._id}` : '/api/v1/products';
+ 
+ document.querySelector('.btn-adm-p').textContent = '⏳ Saving...'; document.querySelector('.btn-adm-p').disabled = true;
+ try {
+ const res = await fetch(url, { 
+ method, 
+ headers: { 
+ 'Authorization': `Bearer ${token}`,
+ 'Accept': 'application/json'
+ }, 
+ body: fd 
+ });
+ const result = await res.json();
+ if(res.ok){
+ if(isEdit) PRODUCTS[idx] = result.data; else PRODUCTS.unshift(result.data);
+ closeModal(); renderProds(); toast(' Product ' + (isEdit?'updated':'added'));
+ } else {
+ let errMsg = result.message || 'Validation failed';
+ if (result.errors) {
+ errMsg = Object.values(result.errors)[0]; // Show the first specific validation error
+ }
+ toast('❌ Error: ' + errMsg);
+ }
+ } catch(e) { toast('❌ Network Error'); } 
+ finally { document.querySelector('.btn-adm-p').textContent = '� Save Product'; document.querySelector('.btn-adm-p').disabled = false; }
+}
+document.getElementById('prodModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// Enquiries
+let enqFilter='all',enqSearch='';
+async function initEnq() {
+ ENQ = await fetchAdminData('enquiries');
+ const badge = document.getElementById('badgeEnq');
+ const newEnq = ENQ.filter(e => e.status !== 'replied').length;
+ if(newEnq > 0) { badge.style.display='inline-flex'; badge.textContent=newEnq; } else { badge.style.display='none'; }
+ renderEnq();
+}
+function renderEnq(){
+ let list=ENQ.map((e,i)=>({...e,_i:i}));
+ if(enqFilter!=='all')list=list.filter(e=>e.status===enqFilter);
+ if(enqSearch){const q=enqSearch.toLowerCase();list=list.filter(e=>e.name.toLowerCase().includes(q)||e.product.toLowerCase().includes(q));}
+ const tb=document.getElementById('enqTbody');
+ const dTb=document.getElementById('dashEnqTbody');
+ if(!list.length){
+ tb.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:2rem;color:#aaa;">No enquiries.</td></tr>`;
+ if(dTb) dTb.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#aaa;padding:1rem;">No enquiries.</td></tr>`;
+ return;
+ }
+ tb.innerHTML=list.map((e,n)=>`<tr><td style="color:#6b7a6d;">${n+1}</td><td><strong>${e.name}</strong></td><td style="color:#6b7a6d;">${e.phone}</td><td>${e.village}</td><td>${e.product}</td><td>${e.crop||'-'}</td><td style="color:#6b7a6d;">${new Date(e.createdAt).toLocaleDateString()}</td><td><span class="chip ${chipClass(e.status)}">${e.status}</span></td><td><div class="acts"><button class="ab ab-edit" onclick="openEnqModal(${e._i})">� Reply</button><button class="ab ab-del" onclick="delEnq(${e._i})"></button></div></td></tr>`).join('');
+ 
+ if(dTb) dTb.innerHTML=ENQ.slice(0,3).map(e=>`<tr><td>${e.name}</td><td>${e.product}</td><td><span class="chip ${chipClass(e.status)}">${e.status}</span></td></tr>`).join('');
+}
+function filterEnq(){enqSearch=document.getElementById('enqSearch').value.trim();renderEnq();}
+function setEnqFilter(el){document.querySelectorAll('[data-ef]').forEach(e=>e.classList.remove('active'));el.classList.add('active');enqFilter=el.dataset.ef;renderEnq();}
+async function markReplied(i){
+ await fetch(`/api/v1/enquiries/${ENQ[i]._id}/status`, { method: 'PATCH', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:'replied'}) });
+ ENQ[i].status='replied';renderEnq();toast(' Marked replied.');
+}
+async function delEnq(i){
+ if(confirm('Remove?')){
+ await fetch(`/api/v1/enquiries/${ENQ[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ ENQ.splice(i,1);renderEnq();toast(' Removed.');
+ }
+}
+
+// Enquiry Modal Functions
+function openEnqModal(idx=''){
+ document.getElementById('enqIdx').value=idx;
+ const e=idx!==''?ENQ[idx]:{};
+ document.getElementById('enqModalTitle').textContent='Reply to Farmer Enquiry';
+ document.getElementById('enqName').textContent=e.name||'';
+ document.getElementById('enqPhone').textContent=e.phone||'';
+ document.getElementById('enqVillage').textContent=e.village||'';
+ document.getElementById('enqProduct').textContent=e.product||'';
+ document.getElementById('enqMessage').textContent=e.message||'';
+ document.getElementById('enqReply').value='';
+ document.getElementById('enqAdminNote').value=e.adminNote||'';
+ document.getElementById('enqModal').classList.add('open');
+}
+function closeEnqModal(){document.getElementById('enqModal').classList.remove('open');}
+async function sendEnqReply(){
+ const idx=document.getElementById('enqIdx').value;
+ const reply=document.getElementById('enqReply').value.trim();
+ const adminNote=document.getElementById('enqAdminNote').value.trim();
+ 
+ if(!reply){toast('⚠ Reply message is required.');return;}
+ 
+ const e=ENQ[idx];
+ const sendBtn=document.querySelector('#enqModal .btn-adm-p');
+ sendBtn.textContent='⏳ Sending...';sendBtn.disabled=true;
+ 
+ try {
+ console.log('Sending reply to enquiry:', e._id);
+ console.log('Token:', token ? 'exists' : 'missing');
+ 
+ // Update enquiry status, reply, and admin note
+ const res = await fetch(`/api/v1/enquiries/${e._id}/status`, { 
+ method: 'PATCH', 
+ headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, 
+ body: JSON.stringify({status:'replied', reply, adminNote}) 
+ });
+ 
+ console.log('Response status:', res.status);
+ console.log('Response ok:', res.ok);
+ 
+ if(res.ok){
+ const result=await res.json();
+ console.log('Response data:', result);
+ ENQ[idx]=result.data;
+ renderEnq();
+ closeEnqModal();
+ toast(' Reply sent and enquiry marked as replied.');
+ } else {
+ const result=await res.json();
+ console.log('Error response:', result);
+ toast('❌ Error: ' + (result.message||'Failed to send reply'));
+ }
+ } catch(e) { 
+ console.error('Network error:', e);
+ toast('❌ Network Error: ' + e.message); 
+ } 
+ finally { 
+ sendBtn.textContent='� Send Reply';sendBtn.disabled=false; 
+ }
+}
+
+// Dealers
+async function initDealers() {
+ DLR = await fetchAdminData('dealers?all=true'); // assuming an all=true param or we just fetch them all
+ renderDealers();
+}
+function renderDealers(){const tb=document.getElementById('dealerTbody');if(!DLR.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:2rem;color:#aaa;">No dealers.</td></tr>`;return;}tb.innerHTML=DLR.map((d,n)=>`<tr><td>${n+1}</td><td><strong>${d.name}</strong></td><td>${d.village}</td><td>${d.district}</td><td style="color:#6b7a6d;">${d.contact}</td><td style="color:#6b7a6d;">${d.since}</td><td><span class="chip ${chipClass(d.status)}">${d.status}</span></td><td><div class="acts"><button class="ab ab-del" onclick="delDlr(${n})"></button></div></td></tr>`).join('');}
+async function delDlr(i){
+ if(confirm('Remove?')){
+ await fetch(`/api/v1/dealers/${DLR[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ DLR.splice(i,1);renderDealers();toast(' Removed.');
+ }
+}
+
+// Applications
+async function initApps() {
+ APPS = await fetchAdminData('dealers/applications');
+ const badge = document.getElementById('badgeApp');
+ const newApps = APPS.filter(a => a.status === 'pending').length;
+ if(newApps > 0) { badge.style.display='inline-flex'; badge.textContent=newApps; } else { badge.style.display='none'; }
+ renderApps();
+}
+function renderApps(){
+ const tb=document.getElementById('appTbody');
+ const dTb=document.getElementById('dashAppTbody');
+ if(!APPS.length){
+ tb.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:2rem;color:#aaa;">No applications.</td></tr>`;
+ if(dTb) dTb.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#aaa;padding:1rem;">No applications.</td></tr>`;
+ return;
+ }
+ tb.innerHTML=APPS.map((a,n)=>`<tr><td>${n+1}</td><td><strong>${a.name}</strong></td><td style="color:#6b7a6d;">${a.phone}</td><td>${a.village}</td><td>${a.shopName || '-'}</td><td style="color:#6b7a6d;">${a.experience}</td><td style="color:#6b7a6d;">${new Date(a.createdAt).toLocaleDateString()}</td><td><span class="chip ${chipClass(a.status)}">${a.status}</span></td><td><div class="acts">${a.status==='pending'?`<button class="ab ab-ok" onclick="appAct(${n},'approved')"></button><button class="ab ab-rej" onclick="appAct(${n},'rejected')">❌</button>`:`<button class="ab ab-del" onclick="delApp(${n})"></button>`}</div></td></tr>`).join('');
+ 
+ if(dTb) dTb.innerHTML=APPS.slice(0,3).map(a=>`<tr><td>${a.name}</td><td>${a.village}</td><td><span class="chip ${chipClass(a.status)}">${a.status}</span></td></tr>`).join('');
+}
+async function appAct(i,s){
+ await fetch(`/api/v1/dealers/applications/${APPS[i]._id}/status`, { method: 'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:s}) });
+ APPS[i].status=s;renderApps();toast(s==='approved'?' Approved!':'❌ Rejected.');
+}
+async function delApp(i){
+ if(confirm('Archive?')){
+ await fetch(`/api/v1/dealers/applications/${APPS[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ APPS.splice(i,1);renderApps();toast(' Archived.');
+ }
+}
+
+initProds(); initEnq(); initDealers(); initApps();
+document.getElementById('enqModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEnqModal();});
+</script>
+</body>
+</html>

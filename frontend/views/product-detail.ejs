@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('partials/head') %>
+</head>
+<body>
+
+<%- include('partials/navbar') %>
+
+<div class="page-hero" style="background:linear-gradient(135deg,#1a3a2a,#2d5a3a);padding:4rem 0 3rem;">
+ <div class="container">
+ <h1><%= product.emoji %> <%= product.name %></h1>
+ <div class="breadcrumb"><a href="/">Home</a> / <a href="/products">Products</a> / <%= product.name %></div>
+ <div style="margin-top:.75rem;">
+ <span class="filter-pill active" style="font-size:.8rem;"><%= product.categoryLabel %></span>
+ <span class="filter-pill" style="font-size:.8rem;margin-left:.5rem;"><%= product.stock %></span>
+ </div>
+ </div>
+</div>
+
+<section class="section">
+ <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;">
+ <!-- Left – details -->
+ <div>
+ <% if (product.image) { %>
+ <div style="margin-bottom:1.5rem;">
+ <img src="<%= product.image %>" alt="<%= product.name %>" style="width:100%;height:350px;object-fit:cover;border-radius:16px;border:4px solid #f0f4f1;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:block;">
+ </div>
+ <% } else { %>
+ <div style="background:linear-gradient(135deg,#f7faf7,#e8f0e8);border-radius:16px;border:4px solid #f0f4f1;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:2.5rem;text-align:center;margin-bottom:1.5rem;font-size:5rem;">
+ <%= product.emoji %>
+ </div>
+ <% } %>
+ 
+ <% if (product.price) { %>
+ <div style="background:linear-gradient(135deg,#1a4d2e,#2d7a44);color:white;border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:inline-block;">
+ <div style="font-size:0.85rem;opacity:0.9;margin-bottom:0.25rem;">Price per bag</div>
+ <div style="font-size:1.8rem;font-weight:700;">₹<%= product.price.toLocaleString('en-IN') %></div>
+ </div>
+ <% } %>
+ 
+ <h2 style="font-size:1.4rem;margin-bottom:.75rem;"><%= product.name %></h2>
+ 
+ <!-- Truncated description with Read More -->
+ <div id="descContainer" style="color:var(--text-light);line-height:1.7;margin-bottom:1.25rem;">
+ <p id="shortDesc" style="margin:0;">
+ <%= product.description.length > 150 ? product.description.substring(0, 150) + '...' : product.description %>
+ </p>
+ <p id="fullDesc" style="margin:0;display:none;">
+ <%= product.description %>
+ </p>
+ <% if (product.description.length > 150) { %>
+ <button id="readMoreBtn" onclick="toggleDescription()" style="background:none;border:none;color:var(--green-mid);cursor:pointer;font-weight:600;padding:0;margin-top:0.5rem;">
+ Read More →
+ </button>
+ <% } %>
+ </div>
+ 
+ <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.75rem;">Key Benefits</h3>
+ <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem;">
+ <% product.benefits.forEach(b => { %>
+ <li style="display:flex;align-items:center;gap:.5rem;font-size:.88rem;"><span style="color:var(--green-mid);">✓</span> <%= b %></li>
+ <% }) %>
+ </ul>
+ <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem;">
+ <% product.tags.forEach(t => { %><span class="tag"><%= t %></span><% }) %>
+ </div>
+ </div>
+ <!-- Right – enquire -->
+ <div class="form-card" style="position:sticky;top:90px;">
+ <div class="form-card-head">
+ <h3>Enquire About This Product</h3>
+ <p>Get the best advice and pricing from our team.</p>
+ </div>
+ <div style="display:flex;flex-direction:column;gap:.75rem;padding:1.25rem 1.5rem;">
+ <a href="/enquiry?product=<%= encodeURIComponent(product.name) %>" class="btn btn-primary btn-lg btn-full"> Send Enquiry</a>
+
+ <a href="tel:+919422184071" class="btn btn-ghost btn-lg btn-full"> +91 94221 84071</a>
+ </div>
+ </div>
+ </div>
+</section>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script>
+function toggleDescription() {
+ const shortDesc = document.getElementById('shortDesc');
+ const fullDesc = document.getElementById('fullDesc');
+ const readMoreBtn = document.getElementById('readMoreBtn');
+ 
+ if (fullDesc.style.display === 'none') {
+ shortDesc.style.display = 'none';
+ fullDesc.style.display = 'block';
+ readMoreBtn.textContent = 'Read Less ←';
+ } else {
+ shortDesc.style.display = 'block';
+ fullDesc.style.display = 'none';
+ readMoreBtn.textContent = 'Read More →';
+ }
+}
+</script>
+</body>
+</html>
