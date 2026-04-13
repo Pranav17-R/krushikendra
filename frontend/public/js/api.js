@@ -4,9 +4,7 @@
 // for all Trishul Krushi Kendra frontend pages
 // ================================================
 
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? '/api/v1' 
-  : 'https://krushikendra-3.onrender.com/api/v1';
+const API_BASE = '/api/v1';
 
 /**
  * Core fetch wrapper — returns { ok, data, errors, message }
