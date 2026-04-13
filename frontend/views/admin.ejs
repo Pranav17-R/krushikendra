@@ -246,7 +246,7 @@ const token = localStorage.getItem('adminToken');
 // Fetch Helpers
 async function fetchAdminData(endpoint) {
  try {
- const res = await fetch(`/api/v1/${endpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
+ const res = await fetch(`${API_BASE}/${endpoint}`, { headers: { 'Authorization': `Bearer ${token}` } });
  const data = await res.json();
  return data.success ? data.data : [];
  } catch(e) { console.error(e); return []; }
@@ -272,7 +272,7 @@ function setProdFilter(el){document.querySelectorAll('[data-pf]').forEach(e=>e.c
 async function delProd(i){
  const p = PRODUCTS[i];
  if(!confirm(`Delete "${p.name}"?`))return;
- await fetch(`/api/v1/products/${p._id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+ await fetch(`${API_BASE}/products/${p._id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
  PRODUCTS.splice(i,1); renderProds(); toast(' Product deleted.');
 }
 function openProductModal(idx=''){document.getElementById('editIdx').value=idx;const p=idx!==''?PRODUCTS[idx]:{};document.getElementById('modalTitle').textContent=idx!==''?'Edit Product':'Add Product';document.getElementById('mName').value=p.name||'';document.getElementById('mCat').value=p.categoryLabel||'';document.getElementById('mPrice').value=p.price||'';document.getElementById('mStock').value=p.stock||'In Stock';document.getElementById('mCompany').value=p.company||'';document.getElementById('mStatus').value=p.status||'Active';document.getElementById('mDesc').value=p.description||'';document.getElementById('mBenefits').value=(p.benefits||[]).join(', ');document.getElementById('mTags').value=(p.tags||[]).join(', ');document.getElementById('prodModal').classList.add('open');}
@@ -309,7 +309,7 @@ async function saveProduct(){
  const idx=document.getElementById('editIdx').value;
  const isEdit = idx !== '';
  const method = isEdit ? 'PUT' : 'POST';
- const url = isEdit ? `/api/v1/products/${PRODUCTS[idx]._id}` : '/api/v1/products';
+ const url = isEdit ? `${API_BASE}/products/${PRODUCTS[idx]._id}` : `${API_BASE}/products`;
  
  document.querySelector('.btn-adm-p').textContent = '⏳ Saving...'; document.querySelector('.btn-adm-p').disabled = true;
  try {
@@ -364,12 +364,12 @@ function renderEnq(){
 function filterEnq(){enqSearch=document.getElementById('enqSearch').value.trim();renderEnq();}
 function setEnqFilter(el){document.querySelectorAll('[data-ef]').forEach(e=>e.classList.remove('active'));el.classList.add('active');enqFilter=el.dataset.ef;renderEnq();}
 async function markReplied(i){
- await fetch(`/api/v1/enquiries/${ENQ[i]._id}/status`, { method: 'PATCH', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:'replied'}) });
+ await fetch(`${API_BASE}/enquiries/${ENQ[i]._id}/status`, { method: 'PATCH', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:'replied'}) });
  ENQ[i].status='replied';renderEnq();toast(' Marked replied.');
 }
 async function delEnq(i){
  if(confirm('Remove?')){
- await fetch(`/api/v1/enquiries/${ENQ[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ await fetch(`${API_BASE}/enquiries/${ENQ[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
  ENQ.splice(i,1);renderEnq();toast(' Removed.');
  }
 }
@@ -405,7 +405,7 @@ async function sendEnqReply(){
  console.log('Token:', token ? 'exists' : 'missing');
  
  // Update enquiry status, reply, and admin note
- const res = await fetch(`/api/v1/enquiries/${e._id}/status`, { 
+ const res = await fetch(`${API_BASE}/enquiries/${e._id}/status`, { 
  method: 'PATCH', 
  headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, 
  body: JSON.stringify({status:'replied', reply, adminNote}) 
@@ -443,7 +443,7 @@ async function initDealers() {
 function renderDealers(){const tb=document.getElementById('dealerTbody');if(!DLR.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:2rem;color:#aaa;">No dealers.</td></tr>`;return;}tb.innerHTML=DLR.map((d,n)=>`<tr><td>${n+1}</td><td><strong>${d.name}</strong></td><td>${d.village}</td><td>${d.district}</td><td style="color:#6b7a6d;">${d.contact}</td><td style="color:#6b7a6d;">${d.since}</td><td><span class="chip ${chipClass(d.status)}">${d.status}</span></td><td><div class="acts"><button class="ab ab-del" onclick="delDlr(${n})"></button></div></td></tr>`).join('');}
 async function delDlr(i){
  if(confirm('Remove?')){
- await fetch(`/api/v1/dealers/${DLR[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ await fetch(`${API_BASE}/dealers/${DLR[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
  DLR.splice(i,1);renderDealers();toast(' Removed.');
  }
 }
@@ -469,12 +469,12 @@ function renderApps(){
  if(dTb) dTb.innerHTML=APPS.slice(0,3).map(a=>`<tr><td>${a.name}</td><td>${a.village}</td><td><span class="chip ${chipClass(a.status)}">${a.status}</span></td></tr>`).join('');
 }
 async function appAct(i,s){
- await fetch(`/api/v1/dealers/applications/${APPS[i]._id}/status`, { method: 'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:s}) });
+ await fetch(`${API_BASE}/dealers/applications/${APPS[i]._id}/status`, { method: 'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body: JSON.stringify({status:s}) });
  APPS[i].status=s;renderApps();toast(s==='approved'?' Approved!':'❌ Rejected.');
 }
 async function delApp(i){
  if(confirm('Archive?')){
- await fetch(`/api/v1/dealers/applications/${APPS[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+ await fetch(`${API_BASE}/dealers/applications/${APPS[i]._id}`, { method: 'DELETE', headers:{'Authorization':`Bearer ${token}`} });
  APPS.splice(i,1);renderApps();toast(' Archived.');
  }
 }

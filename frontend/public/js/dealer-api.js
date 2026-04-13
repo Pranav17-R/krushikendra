@@ -69,12 +69,10 @@ async function loadDealers() {
   const district = grid.dataset.district || 'all';
   
   try {
-    const res = await fetch(`/api/v1/dealers?district=${district}`);
-    const data = await res.json();
-    
-    if (!data.success) throw new Error(data.message || 'Failed to load dealers');
+    const result = await TKK.getDealers({ district });
+    if (!result.ok) throw new Error(result.message || 'Failed to load dealers');
 
-    const dealers = data.data;
+    const dealers = result.data;
 
     const countEl = document.getElementById('api-result-count');
     if (countEl) countEl.innerHTML = `${dealers.length} dealer${dealers.length !== 1 ? 's' : ''}`;
@@ -134,11 +132,10 @@ async function loadDealers() {
 
     // Fetch total count for stats strip
     if (district !== 'all') {
-      const resAll = await fetch(`/api/v1/dealers`);
-      const dataAll = await resAll.json();
-      if (dataAll.success) {
+      const resultAll = await TKK.getDealers();
+      if (resultAll.ok) {
         const totalEl = document.getElementById('dstat-total');
-        if (totalEl) totalEl.textContent = dataAll.data.length;
+        if (totalEl) totalEl.textContent = resultAll.data.length;
       }
     } else {
       const totalEl = document.getElementById('dstat-total');

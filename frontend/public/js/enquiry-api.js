@@ -82,11 +82,10 @@ async function loadProductsDropdown() {
  const targetVal = preselect || formPreselect;
 
  try {
- const res = await fetch('/api/v1/products');
- const data = await res.json();
+ const result = await TKK.getProducts();
  
- if (data.success && data.data) {
- const options = data.data.map(p => {
+ if (result.ok && result.data) {
+ const options = result.data.map(p => {
  const isSelected = (p.name === targetVal) ? 'selected' : '';
  return `<option value="${p.name}" ${isSelected}>${p.emoji || ''} ${p.name} (${p.categoryLabel})</option>`;
  });
