@@ -36,7 +36,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Lora', serif;
   color: var(--text-dark);
   background: var(--cream);
   line-height: 1.6;
@@ -49,12 +49,20 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 input, select, textarea { font-family: inherit; }
 
 /* ─── Typography ────────────────────────────────── */
-h1, h2, h3, h4 { font-family: 'Merriweather', serif; line-height: 1.25; }
+h1, h2, h3, h4 { font-family: 'Lora', serif; line-height: 1.25; }
 h1 { font-size: clamp(1.9rem, 5vw, 3.2rem); }
 h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); }
 h3 { font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
 h4 { font-size: 1.05rem; }
 p  { color: var(--text-mid); }
+
+/* Lora Font */
+.lora {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 /* ─── Utilities ─────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
@@ -475,7 +483,7 @@ p  { color: var(--text-mid); }
 .hero-visual-floating {
   width: 100%;
   max-width: 450px;
-  animation: float-visual 6s ease-in-out infinite;
+  animation: float-visual 3s ease-in-out infinite;
 }
 @keyframes float-visual {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -876,7 +884,7 @@ p  { color: var(--text-mid); }
   overflow: hidden;
 }
 .page-hero-green {
-  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  background: linear-gradient(135deg, rgba(26,77,46,0.5), rgba(45,122,68,0.5));
   color: var(--white);
 }
 .page-hero-green::before {
@@ -884,6 +892,7 @@ p  { color: var(--text-mid); }
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
 }
 .page-hero h1 { color: var(--white); position: relative; z-index: 1; }
 .page-hero p  { color: rgba(255,255,255,0.82); margin-top: 0.5rem; position: relative; z-index: 1; font-size: 1.05rem; }
