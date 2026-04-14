@@ -33,3 +33,25 @@ exports.verifyToken = (req, res, next) => {
     });
   }
 };
+
+/**
+ * requireAdmin
+ * Middleware for EJS routes – checks cookie, redirects to login if missing
+ */
+exports.requireAdmin = (req, res, next) => {
+  const token = req.cookies.adminToken;
+  
+  if (!token) {
+    return res.redirect('/admin/login');
+  }
+
+  try {
+    const jwtSecret = process.env.JWT_SECRET || 'trishul-krushi-kendra-default-secret';
+    const decoded = jwt.verify(token, jwtSecret);
+    req.admin = decoded;
+    next();
+  } catch (err) {
+    res.clearCookie('adminToken');
+    return res.redirect('/admin/login');
+  }
+};

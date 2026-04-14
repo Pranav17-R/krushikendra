@@ -5,9 +5,7 @@ const express         = require('express');
 const router          = express.Router();
 const adminController = require('../controllers/adminController');
 
-// TODO: Protect with auth middleware before going to production
-// const { requireAuth } = require('../middleware/auth');
-// router.use(requireAuth);
+const { requireAdmin } = require('../middleware/auth');
 
 // GET /admin/login – serve login page
 router.get('/login', (req, res) => {
@@ -15,6 +13,12 @@ router.get('/login', (req, res) => {
 });
 
 // GET /admin  – dashboard with live DB stats
-router.get('/', adminController.showDashboard);
+router.get('/', requireAdmin, adminController.showDashboard);
+
+// GET /admin/logout – clear cookie and redirect
+router.get('/logout', (req, res) => {
+  res.clearCookie('adminToken');
+  res.redirect('/admin/login');
+});
 
 module.exports = router;

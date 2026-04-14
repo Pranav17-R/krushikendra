@@ -11,6 +11,7 @@ const connectDB    = require('./config/db');
 const logger       = require('./middleware/logger');
 const notFound     = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
+const cookieParser = require('cookie-parser');
 
 // ── Route imports ──────────────────────────────
 const indexRouter      = require('./routes/index');
@@ -58,6 +59,7 @@ app.use((req, res, next) => {
 // ── Body parsing ───────────────────────────────
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // ── Request logger ─────────────────────────────
 app.use(logger);

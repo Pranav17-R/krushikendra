@@ -3,7 +3,7 @@
 // ================================================
 const mongoose = require('mongoose');
 
-const DISTRICTS = ['pune', 'nashik', 'ahmednagar', 'other'];
+const DISTRICTS = ['pune', 'nashik', 'ahmednagar', 'satara', 'kolhapur', 'solapur', 'aurangabad', 'other'];
 const EXPERIENCE_OPTIONS = ['0-1', '1-3', '3-5', '5+'];
 
 const dealerApplicationSchema = new mongoose.Schema(

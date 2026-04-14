@@ -29,7 +29,7 @@ const dealerSchema = new mongoose.Schema(
       required:  [true, 'District is required'],
       lowercase: true,
       enum: {
-        values:  ['pune', 'nashik', 'ahmednagar', 'other'],
+        values:  ['pune', 'nashik', 'ahmednagar', 'satara', 'kolhapur', 'solapur', 'aurangabad', 'other'],
         message: 'Invalid district: {VALUE}',
       },
     },

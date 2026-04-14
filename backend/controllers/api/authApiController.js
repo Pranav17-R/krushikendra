@@ -48,6 +48,14 @@ exports.login = async (req, res) => {
       { expiresIn: '24h' }
     );
 
+    // 4. Set secure cookie for server-side auth
+    res.cookie('adminToken', token, {
+      httpOnly: true,
+      secure:   process.env.NODE_ENV === 'production',
+      maxAge:   24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'strict'
+    });
+
     return ok(res, { token, username: admin.username }, 'Login successful', 200);
 
   } catch (e) {
