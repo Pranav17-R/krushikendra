@@ -4,7 +4,8 @@
 // for all Trishul Krushi Kendra frontend pages
 // ================================================
 
-const API_BASE = 'https://krushikendra-web.onrender.com';
+// Prefer explicit global override when provided, otherwise default to same-origin API v1.
+const API_BASE = (window.TKK_API_BASE || '/api/v1').replace(/\/+$/, '');
 
 /**
  * Core fetch wrapper — returns { ok, data, errors, message }
