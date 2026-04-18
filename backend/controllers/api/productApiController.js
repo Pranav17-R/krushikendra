@@ -11,8 +11,18 @@ const ok  = (res, data, msg = 'Success', status = 200) =>
 const err = (res, msg, status = 400, extra = {}) =>
   res.status(status).json({ success: false, message: msg, ...extra });
 
+// Avoid Mongoose buffering timeouts when DB is disconnected.
+const ensureDbConnected = (res) => {
+  if (mongoose.connection.readyState !== 1) {
+    err(res, 'Database unavailable. Please try again shortly.', 503);
+    return false;
+  }
+  return true;
+};
+
 // ── GET /api/v1/products ─────────────────────────
 exports.getAllProducts = async (req, res) => {
+  if (!ensureDbConnected(res)) return;
   try {
     const { filter, search, featured, page = 1, limit = 20 } = req.query;
     const query = { status: 'active' };
@@ -49,6 +59,7 @@ exports.getAllProducts = async (req, res) => {
 
 // ── GET /api/v1/products/:id ─────────────────────
 exports.getProductById = async (req, res) => {
+  if (!ensureDbConnected(res)) return;
   try {
     const { id } = req.params;
     const bySlug = !mongoose.isValidObjectId(id);
@@ -72,6 +83,7 @@ exports.getProductById = async (req, res) => {
 
 // ── POST /api/v1/products ────────────────────────
 exports.createProduct = async (req, res) => {
+  if (!ensureDbConnected(res)) return;
   try {
     const productData = { ...req.body };
     // If an image was uploaded, handle both Cloudinary and local disk paths
@@ -115,6 +127,7 @@ exports.createProduct = async (req, res) => {
 
 // ── PUT /api/v1/products/:id ─────────────────────
 exports.updateProduct = async (req, res) => {
+  if (!ensureDbConnected(res)) return;
   try {
     const productData = { ...req.body };
     if (req.file) {
@@ -161,6 +174,7 @@ exports.updateProduct = async (req, res) => {
 
 // ── DELETE /api/v1/products/:id ──────────────────
 exports.deleteProduct = async (req, res) => {
+  if (!ensureDbConnected(res)) return;
   try {
     // Soft-delete: set status to inactive
     const product = await Product.findByIdAndUpdate(
