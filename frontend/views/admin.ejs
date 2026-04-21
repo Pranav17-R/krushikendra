@@ -286,6 +286,8 @@ function closeModal(){document.getElementById('prodModal').classList.remove('ope
 async function saveProduct(){
  const name=document.getElementById('mName').value.trim(), catLbl=document.getElementById('mCat').value, desc=document.getElementById('mDesc').value.trim();
  if(!name||!catLbl||!desc){toast('⚠ Name, category and description are required.');return;}
+ if(name.length < 2){toast('⚠ Name must be at least 2 characters.');return;}
+ if(desc.length < 10){toast('⚠ Description must be at least 10 characters.');return;}
  const catMap = { 'Organic Fertilizer':'organic', 'Chemical Fertilizer':'chemical', 'Pesticide':'pesticide', 'Crop Protection':'crop-protection' };
  const fd = new FormData();
  fd.append('name', name); fd.append('category', catMap[catLbl] || 'organic');
@@ -307,7 +309,8 @@ async function saveProduct(){
  fd.append('tags', JSON.stringify(tags));
  }
  
- const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+ let slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+ if (!slug) slug = 'product-' + Date.now();
  fd.append('slug', slug);
  const fileInput = document.getElementById('mImage');
  if (fileInput.files[0]) fd.append('image', fileInput.files[0]);

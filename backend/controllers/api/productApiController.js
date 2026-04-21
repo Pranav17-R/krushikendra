@@ -153,6 +153,9 @@ exports.updateProduct = async (req, res) => {
         productData.tags = productData.tags.split(',').map(s => s.trim()).filter(Boolean);
       }
     }
+    if (productData.price === '') {
+      productData.price = null;
+    }
 
     const product = await Product.findByIdAndUpdate(
       req.params.id,
@@ -163,11 +166,13 @@ exports.updateProduct = async (req, res) => {
     return ok(res, { data: product }, 'Product updated successfully');
   } catch (e) {
     if (e.name === 'ValidationError') {
+      console.error('=== Mongoose Validation Error (updateProduct) ===', e.errors);
       const errors = Object.fromEntries(
         Object.entries(e.errors).map(([k, v]) => [k, v.message])
       );
       return err(res, 'Validation failed', 422, { errors });
     }
+    if (e.code === 11000) return err(res, 'A product with this slug already exists', 409);
     return err(res, e.message, 500);
   }
 };
